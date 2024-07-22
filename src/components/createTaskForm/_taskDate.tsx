@@ -4,11 +4,11 @@ import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
-import { Dayjs } from 'dayjs';
 
 import { IDateField } from './interfaces/IDateField';
 
 import PropTypes from 'prop-types';
+import dayjs from 'dayjs';
 
 export const TaskDate: FC<IDateField> = (props): ReactElement => {
   const { disabled = false, value = null, onChange } = props;
@@ -19,7 +19,7 @@ export const TaskDate: FC<IDateField> = (props): ReactElement => {
         <DemoItem>
           <DesktopDatePicker
             label={'Task Date'}
-            value={value}
+            value={dayjs(value)}
             onChange={onChange}
             disabled={disabled}
           />
@@ -30,7 +30,7 @@ export const TaskDate: FC<IDateField> = (props): ReactElement => {
 };
 
 TaskDate.propTypes = {
+  value: PropTypes.instanceOf(Date),
   onChange: PropTypes.func,
-  value: PropTypes.instanceOf(Dayjs),
   disabled: PropTypes.bool,
 };

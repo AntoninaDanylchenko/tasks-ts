@@ -1,10 +1,8 @@
-import { Dayjs } from 'dayjs';
-import { TaskCounterStatusType } from '../../taskCounter/interfaces/ITaskCounter';
 import React from 'react';
 
 export interface ITaskHeader {
   title?: string;
-  date?: Date | Dayjs;
+  date?: Date | null;
 }
 
 export interface ITaskDescription {
@@ -12,14 +10,17 @@ export interface ITaskDescription {
 }
 
 export interface ITaskFooter {
-  onStatusChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  id: string;
+  status?: string;
+  onStatusChange?: (e: React.ChangeEvent<HTMLInputElement>, id: string) => void;
   onClick?: (
-    e: React.MouseEvent<HTMLButtonElement> | React.MouseEvent<HTMLAnchorElement>
+    e:
+      | React.MouseEvent<HTMLButtonElement>
+      | React.MouseEvent<HTMLAnchorElement>,
+    id: string
   ) => void;
 }
 
 export interface ITask extends ITaskHeader, ITaskDescription, ITaskFooter {
-  id?: string;
   priority?: string;
-  status?: TaskCounterStatusType;
 }

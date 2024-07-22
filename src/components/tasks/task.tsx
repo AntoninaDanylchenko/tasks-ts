@@ -1,24 +1,24 @@
 import { Box } from '@mui/material';
 import React, { FC, ReactElement } from 'react';
 import { ITask } from './interfaces/ITask';
-// import { Status } from '../createTaskForm/enums/Status';
+import { Status } from '../createTaskForm/enums/Status';
 import { TaskHeader } from './_taskHeader';
 import { TaskDescription } from './_taskDescription';
 import { TaskFooter } from './_taskFooter';
 import { Priority } from '../createTaskForm/enums/Priority';
-import dayjs from 'dayjs';
 import PropTypes from 'prop-types';
 import { renderBorderColor } from './helpers/renderBorderColor';
 
 export const Task: FC<ITask> = (props): ReactElement => {
   const {
     title = 'Task title',
-    date = dayjs(),
+    date = new Date(),
     description = 'Task description',
     priority = Priority.hight,
-    // status = Status.todo,
+    status = Status.todo,
     onStatusChange = (e) => console.log(e),
     onClick = (e) => console.log(e),
+    id,
   } = props;
   return (
     <Box
@@ -38,17 +38,20 @@ export const Task: FC<ITask> = (props): ReactElement => {
     >
       <TaskHeader title={title} date={date} />
       <TaskDescription description={description} />
-      <TaskFooter onStatusChange={onStatusChange} onClick={onClick} />
+      <TaskFooter
+        id={id}
+        status={status}
+        onStatusChange={onStatusChange}
+        onClick={onClick}
+      />
     </Box>
   );
 };
 
-TaskHeader.propTypes = {
+Task.propTypes = {
   title: PropTypes.string,
-  // date: PropTypes.instanceOf(Date),
-  // description: PropTypes.string,
-  // onStatusChange: PropTypes.func,
-  // onClick: PropTypes.func,
-  // priority: PropTypes.string,
-  // status: PropTypes.string,
+  date: PropTypes.instanceOf(Date),
+  description: PropTypes.string,
+  onStatusChange: PropTypes.func,
+  onClick: PropTypes.func,
 };
