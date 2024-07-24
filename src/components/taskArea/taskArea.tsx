@@ -1,6 +1,6 @@
 import { Alert, Grid, LinearProgress } from '@mui/material';
 import dayjs from 'dayjs';
-import React, { FC, ReactElement } from 'react';
+import React, { FC, ReactElement, useContext, useEffect } from 'react';
 import { TaskCounter } from '../taskCounter/taskCounter';
 import { Task } from '../tasks/task';
 import { useMutation, useQuery } from '@tanstack/react-query';
@@ -8,9 +8,14 @@ import { sendApiRequest } from '../../helpers/sendApiRequest';
 import { ITask } from './interfaces/ITask';
 import { Status } from '../createTaskForm/enums/Status';
 import { ITaskUpdate } from './interfaces/ITaskUpdate';
+import { countTasks } from './helpers/countTasks';
+import { TaskStatusChangedContext } from '../../context';
 
 export const TaskArea: FC = (): ReactElement => {
-  const { error, isLoading, data } = useQuery({
+  const taskUpdatedContext = useContext(TaskStatusChangedContext);
+
+
+  const { error, isLoading, data, refetch } = useQuery({
     queryKey: ['task'],
     queryFn: async () => {
       return await sendApiRequest<ITask[]>(
@@ -25,6 +30,16 @@ export const TaskArea: FC = (): ReactElement => {
       return sendApiRequest('http://localhost:3200/tasks', 'PUT', data);
     },
   });
+
+    useEffect(() => {
+    refetch();
+  }, [taskUpdatedContext.updated]);
+
+   useEffect(() => {
+     if (updateTaskMutation.isSuccess) {
+       taskUpdatedContext.toggle();
+    }
+  }, [updateTaskMutation.isSuccess]);
 
   function onStatusChangeHandler(
     e: React.ChangeEvent<HTMLInputElement>,
@@ -61,9 +76,9 @@ export const TaskArea: FC = (): ReactElement => {
           xs={12}
           mb={8}
         >
-          <TaskCounter />
-          <TaskCounter />
-          <TaskCounter />
+          <TaskCounter count={ data ? countTasks(data, Status.todo): undefined} status={Status.todo} />
+          <TaskCounter count={data ? countTasks(data, Status.inProgress) : undefined}  status={Status.inProgress} />
+          <TaskCounter count={data ? countTasks(data, Status.completed) : undefined} status={Status.completed}/>
         </Grid>
         <Grid item display="flex" flexDirection="column" xs={10} md={8}>
           {/* {data?.forEach(<Task id={} />)} */}

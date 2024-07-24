@@ -20,7 +20,8 @@
   },
   "plugins": ["react", "@typescript-eslint", "prettier"],
   "rules": {
-    // Add or override rules here
+    "no-empty-function":"off",
+    "@typescript-eslint/no-empty-function": "off"
   },
   "settings": {
     "react": {
